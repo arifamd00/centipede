@@ -86,7 +86,7 @@ public class TestRunner {
 	}
 	@AfterMethod
 	public void tearDown() {
-		//driver.close();
+		
 		
 		
 	}
