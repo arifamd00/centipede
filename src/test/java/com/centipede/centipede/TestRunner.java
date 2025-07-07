@@ -59,6 +59,9 @@ public class TestRunner {
 		String comment = "";
 		
 		if(method.equalsIgnoreCase("get")) {
+			System.out.println(proxy.equalsIgnoreCase(""));
+			System.out.println(proxy);
+			System.out.println(headers);
 			if(!proxy.equalsIgnoreCase("")) {
 				response = restUtils.hitGet(proxy, baseUri, paths, queryParams, headers);
 				

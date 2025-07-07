@@ -13,8 +13,8 @@ public class RestUtils {
 		Map<String, String> headersMap = new HashMap<>();
 		if(!headers.equals("")) {
 			for(String header: headersArr) {
-				String headerKey = header.split(":")[0];
-				String headerValue = header.split(":")[1];
+				String headerKey = header.split("=")[0];
+				String headerValue = header.split("=")[1];
 				headersMap.put(headerKey, headerValue);
 			}
 		}
@@ -40,10 +40,12 @@ public class RestUtils {
 	public Response hitGet(String hostAndPort, String baseUri, String path, String queryParams, String headers) {
 		String[] headersArr = headers.split(";");
 		Map<String, String> headersMap = new HashMap<>();
-		for(String header: headersArr) {
-			String headerKey = header.split(":")[0];
-			String headerValue = header.split(":")[1];
-			headersMap.put(headerKey, headerValue);
+		if(!headers.equals("")) {
+			for(String header: headersArr) {
+				String headerKey = header.split("=")[0];
+				String headerValue = header.split("=")[1];
+				headersMap.put(headerKey, headerValue);
+			}
 		}
 		
 //		String[] queryParamArr = queryParams.split(";");
@@ -68,8 +70,8 @@ public class RestUtils {
 		Map<String, String> headersMap = new HashMap<>();
 		if(!headers.equals("")) {
 			for(String header: headersArr) {
-				String headerKey = header.split(":")[0];
-				String headerValue = header.split(":")[1];
+				String headerKey = header.split("=")[0];
+				String headerValue = header.split("=")[1];
 				headersMap.put(headerKey, headerValue);
 			}
 		}
@@ -98,8 +100,8 @@ public class RestUtils {
 		Map<String, String> headersMap = new HashMap<>();
 		if(!headers.equals("")) {
 			for(String header: headersArr) {
-				String headerKey = header.split(":")[0];
-				String headerValue = header.split(":")[1];
+				String headerKey = header.split("=")[0];
+				String headerValue = header.split("=")[1];
 				headersMap.put(headerKey, headerValue);
 			}
 		}
@@ -128,8 +130,8 @@ public class RestUtils {
 		Map<String, String> headersMap = new HashMap<>();
 		if(!headers.equals("")) {
 			for(String header: headersArr) {
-				String headerKey = header.split(":")[0];
-				String headerValue = header.split(":")[1];
+				String headerKey = header.split("=")[0];
+				String headerValue = header.split("=")[1];
 				headersMap.put(headerKey, headerValue);
 			}
 		}
@@ -158,8 +160,8 @@ public class RestUtils {
 		Map<String, String> headersMap = new HashMap<>();
 		if(!headers.equals("")) {
 			for(String header: headersArr) {
-				String headerKey = header.split(":")[0];
-				String headerValue = header.split(":")[1];
+				String headerKey = header.split("=")[0];
+				String headerValue = header.split("=")[1];
 				headersMap.put(headerKey, headerValue);
 			}
 		}
