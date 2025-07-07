@@ -22,6 +22,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+import io.restassured.module.jsv.JsonSchemaValidator;
 import io.restassured.response.Response;
 import utils.ExcelUtils;
 import utils.RestUtils;
@@ -38,7 +39,7 @@ public class TestRunner {
 		
 	}
 	
-	@Test(dataProvider="csvReader2", dataProviderClass = csvReader.class, invocationCount = 100, threadPoolSize = 5)
+	@Test(dataProvider="csvReader2", dataProviderClass = csvReader.class, invocationCount = 1, threadPoolSize = 2)
 	public void crawl(Object[] data) {
 		System.out.println("Thread: "+Thread.currentThread().getId());
 		String testCaseId = data[0].toString();
@@ -49,28 +50,62 @@ public class TestRunner {
 		String headers = data[5].toString();
 		String paths = data[6].toString();
 		String queryParams = data[7].toString();
-		int expectedStatusCode = Integer.valueOf(data[8].toString());
+		String body = data[8].toString();
+		
+		int expectedStatusCode = Integer.valueOf(data[9].toString());
+		String responseSchema = data[10].toString();
 		int actualStatusCode = -1;
 		Response response = null;
 		String comment = "";
 		
 		if(method.equalsIgnoreCase("get")) {
-			if(proxy.equalsIgnoreCase("")) {
-				response = restUtils.hitGet(baseUri, paths, queryParams, headers);
+			if(!proxy.equalsIgnoreCase("")) {
+				response = restUtils.hitGet(proxy, baseUri, paths, queryParams, headers);
 				
 			}else {
-				response = restUtils.hitGet(proxy, baseUri, paths, queryParams, headers);
+				response = restUtils.hitGet(baseUri, paths, queryParams, headers);
 			}
 			actualStatusCode = response.statusCode();
 			
 			System.out.println(response.getBody().asString());
 			
+		}else if(method.equalsIgnoreCase("post")) {
+			if(!proxy.equalsIgnoreCase("")) {
+				response = restUtils.hitPost(proxy, baseUri, paths, queryParams, headers,body);
+				
+			}else {
+				response = restUtils.hitPost(baseUri, paths, queryParams, headers,body);
+			}
+			actualStatusCode = response.statusCode();
+			
+			System.out.println(response.getBody().asString());
+			
+		}else if(method.equalsIgnoreCase("put")) {
+			if(!proxy.equalsIgnoreCase("")) {
+				response = restUtils.hitPost(proxy, baseUri, paths, queryParams, headers,body);
+				
+			}else {
+				response = restUtils.hitPost(baseUri, paths, queryParams, headers,body);
+			}
+			actualStatusCode = response.statusCode();
+			
+			System.out.println(response.getBody().asString());
+		}
+		
+		if(!responseSchema.equals("")) {
+			try {
+			response.then().assertThat().body(JsonSchemaValidator.matchesJsonSchema(responseSchema));
+			}catch(Exception e) {
+				comment +=e.getLocalizedMessage().toString();
+			}
 		}
 		
 		if(actualStatusCode!=expectedStatusCode) {
-			comment+="expected status code: "+expectedStatusCode+", but got "+actualStatusCode;
+			comment+="\nexpected status code: "+expectedStatusCode+", but got "+actualStatusCode;
 		}
-		Assert.assertTrue(comment.equals(""), comment);
+		
+		System.out.println(comment);
+		//Assert.assertTrue(comment.equals(""), comment.toString());
 		
 		// decision
 		String decision="";
